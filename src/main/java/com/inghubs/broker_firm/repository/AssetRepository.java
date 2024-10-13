@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, UUID> {
-    List<Asset> findByCustomerId(UUID customerId);
+    List<Asset> findByUserId(UUID userId);
 
-    Optional<Asset> findByNameAndCustomerId(String name, UUID customerId);
+    Optional<Asset> findByNameAndUserId(String name, UUID userId);
 }

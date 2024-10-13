@@ -12,7 +12,7 @@ public class AssetDTO {
 
     private Double usableSize;
 
-    private UUID customerId;
+    private UUID userId;
 
     public UUID getId() {
         return id;
@@ -26,7 +26,7 @@ public class AssetDTO {
         return name;
     }
 
-    public void setAssetName(String assetName) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -46,11 +46,11 @@ public class AssetDTO {
         this.usableSize = usableSize;
     }
 
-    public UUID getCustomerId() {
-        return customerId;
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setCustomer(UUID customerId) {
-        this.customerId = customerId;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 }

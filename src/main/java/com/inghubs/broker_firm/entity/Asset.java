@@ -27,9 +27,9 @@ public class Asset {
     private Double usableSize;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "user_id")
     @NotNull
-    private Customer customer;
+    private User user;
 
     public UUID getId() {
         return id;
@@ -63,11 +63,11 @@ public class Asset {
         this.usableSize = usableSize;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

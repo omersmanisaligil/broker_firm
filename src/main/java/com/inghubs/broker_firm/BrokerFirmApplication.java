@@ -15,5 +15,4 @@ public class BrokerFirmApplication {
 	public BCryptPasswordEncoder bCryptPasswordEncoder(){
 		return new BCryptPasswordEncoder();
 	}
-
 }

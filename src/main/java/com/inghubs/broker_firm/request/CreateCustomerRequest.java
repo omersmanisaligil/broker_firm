@@ -1,14 +1,10 @@
 package com.inghubs.broker_firm.request;
 
-import com.inghubs.broker_firm.enums.ROLE;
-
-public class CreateUserRequest {
+public class CreateCustomerRequest {
 
     private String username;
 
     private String password;
-
-    private ROLE role;
 
     public String getUsername() {
         return username;
@@ -24,13 +20,5 @@ public class CreateUserRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public ROLE getRole() {
-        return role;
-    }
-
-    public void setRole(ROLE role) {
-        this.role = role;
     }
 }

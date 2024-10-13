@@ -12,13 +12,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class Order {
 
     @Id
@@ -48,16 +49,17 @@ public class Order {
     @NotNull
     private STATUS status;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private Long createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "user_id")
     @NotNull
-    private Customer customer;
+    private User user;
 
     @PrePersist
     public void preSave(){
+        status = STATUS.PENDING;
         createdAt = System.currentTimeMillis();
     }
 
@@ -117,11 +119,11 @@ public class Order {
         this.createdAt = createdAt;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

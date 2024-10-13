@@ -1,6 +1,8 @@
 package com.inghubs.broker_firm.controller;
 
-import com.inghubs.broker_firm.dto.CustomerDTO;
+import com.inghubs.broker_firm.dto.UserDTO;
+import com.inghubs.broker_firm.request.CreateCustomerRequest;
+import com.inghubs.broker_firm.request.AssetTransactionRequest;
 import com.inghubs.broker_firm.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,32 +19,37 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @GetMapping
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        List<CustomerDTO> customers = customerService.getAllCustomers();
+    @GetMapping //TODO all
+    public ResponseEntity<List<UserDTO>> getAllCustomers() {
+        List<UserDTO> customers = customerService.getAllCustomers();
         return ResponseEntity.ok(customers);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable UUID id) {
-        CustomerDTO customer = customerService.getOneById(id);
+    @GetMapping("/{id}") //TODO admin + customer special
+    public ResponseEntity<UserDTO> getCustomerById(@PathVariable UUID id) {
+        UserDTO customer = customerService.getOneById(id);
         return ResponseEntity.ok(customer);
     }
 
     @PostMapping
-    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) {
-        CustomerDTO createdCustomer = customerService.createCustomer(customerDTO);
+    public ResponseEntity<UserDTO> createCustomer(@RequestBody CreateCustomerRequest customerRequest) {
+        UserDTO createdCustomer = customerService.createCustomer(customerRequest);
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable UUID id, @RequestBody CustomerDTO customerDTO) {
-        customerDTO.setId(id);
-        CustomerDTO updatedCustomer = customerService.updateCustomer(customerDTO);
+    @PutMapping("/{id}/deposit")//TODO admin + customer
+    public ResponseEntity<UserDTO> depositMoney(@PathVariable UUID id, @RequestBody AssetTransactionRequest depositRequest){
+        UserDTO updatedCustomer = customerService.depositMoney(id,depositRequest);
         return ResponseEntity.ok(updatedCustomer);
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}/withdraw")//TODO admin + customer
+    public ResponseEntity<UserDTO> withdrawMoney(@PathVariable UUID id, @RequestBody AssetTransactionRequest withdrawRequest){
+        UserDTO updatedCustomer = customerService.withdrawMoney(id,withdrawRequest);
+        return ResponseEntity.ok(updatedCustomer);
+    }
+
+    @DeleteMapping("/{id}") //TODO admin + customer
     public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
         customerService.deleteById(id);
         return ResponseEntity.noContent().build();

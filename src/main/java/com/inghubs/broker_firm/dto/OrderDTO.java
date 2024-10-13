@@ -13,11 +13,15 @@ public class OrderDTO {
 
     private SIDE orderSide;
 
+    private Double size;
+
+    private Double price;
+
     private STATUS status;
 
     private Long createdAt;
 
-    private UUID customerId;
+    private UUID userId;
 
     public UUID getId() {
         return id;
@@ -59,11 +63,31 @@ public class OrderDTO {
         this.createdAt = createdAt;
     }
 
-    public UUID getCustomerID() {
-        return customerId;
+    public void setUser(UUID userId) {
+        this.userId = userId;
     }
 
-    public void setCustomer(UUID customerId) {
-        this.customerId = customerId;
+    public Double getSize() {
+        return size;
+    }
+
+    public void setSize(Double size) {
+        this.size = size;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

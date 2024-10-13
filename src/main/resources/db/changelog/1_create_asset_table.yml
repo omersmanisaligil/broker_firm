@@ -3,10 +3,8 @@ databaseChangeLog:
       id: 1
       author: Ömer Seyfettin Manisalıgil
       changes:
-
-
         - createTable:
-            tableName: order
+            tableName: asset
             columns:
               - column:
                   name: id
@@ -15,11 +13,8 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: asset_name
+                  name: name
                   type: varchar(16)
-              - column:
-                  name: order_side
-                  type: varchar(4)
                   constraints:
                     nullable: false
               - column:
@@ -28,32 +23,23 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: price
+                  name: usable_size
                   type: numeric
                   constraints:
                     nullable: false
               - column:
-                  name: status
-                  type: varchar(16)
-                  defaultValue: PENDING
-                  constraints:
-                    nullable: false
-              - column:
-                  name: created_at
-                  type: bigint
-                  defaultValueNumeric: 0
-                  constraints:
-                    nullable: false
-              - column:
-                  name: customer_id
+                  name: user_id
                   type: UUID
                   constraints:
-                    foreignKeyName: fk_order_customer_id
-                    references: customer(id)
+                    foreignKeyName: fk_asset_user_id
+                    references: users(id)
                     nullable: false
         - createIndex:
-            tableName: order
-            indexName: idx_order_customer_id
+            tableName: asset
+            indexName: idx_asset_user_id
             columns:
               column:
-                name: customer_id
+                name: user_id
+        - addUniqueConstraint:
+            tableName: asset
+            columnNames: name, user_id

@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Ömer Seyfettin Manisalıgil
+      changes:
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: asset_name
+                  type: varchar(16)
+              - column:
+                  name: order_side
+                  type: varchar(4)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: size
+                  type: numeric
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: numeric
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(16)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: bigint
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_order_customer_id
+                    references: users(id)
+                    nullable: false
+        - createIndex:
+            tableName: orders
+            indexName: idx_order_user_id
+            columns:
+              column:
+                name: user_id
+        - createIndex:
+            tableName: orders
+            indexName: idx_order_created_at
+            columns:
+              column:
+                name: created_at

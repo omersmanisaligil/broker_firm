@@ -1,6 +1,8 @@
 package com.inghubs.broker_firm.controller;
 
 import com.inghubs.broker_firm.dto.OrderDTO;
+import com.inghubs.broker_firm.enums.SIDE;
+import com.inghubs.broker_firm.enums.STATUS;
 import com.inghubs.broker_firm.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,40 +19,61 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping
+    @GetMapping//TODO all
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
         List<OrderDTO> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}")//TODO admin + customer if belongs to him
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable UUID id) {
         OrderDTO order = orderService.getOneById(id);
         return ResponseEntity.ok(order);
     }
 
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<OrderDTO>> getOrdersByCustomerId(@PathVariable UUID customerId) {
-        List<OrderDTO> orders = orderService.getByCustomerId(customerId);
+    @GetMapping("/searchByCustomer/{userId}")//TODO customer
+    public ResponseEntity<List<OrderDTO>> getOrdersByCustomerId(@PathVariable UUID userId) {
+        List<OrderDTO> orders = orderService.getByUserId(userId);
         return ResponseEntity.ok(orders);
     }
 
-    @PostMapping
+    @GetMapping("/filter")
+    public ResponseEntity<List<OrderDTO>> filterOrders(
+        @RequestParam(required = false) UUID userId,
+        @RequestParam(required = false) Long startDate,
+        @RequestParam(required = false) Long endDate,
+        @RequestParam(required = false) STATUS status,
+        @RequestParam(required = false) Double lowerPriceLimit,
+        @RequestParam(required = false) Double upperPriceLimit,
+        @RequestParam(required = false) Double lowerSize,
+        @RequestParam(required = false) Double upperSize,
+        @RequestParam(required = false) SIDE side,
+        @RequestParam(required = false) String assetName
+    ){
+        List<OrderDTO> orders = orderService.filterOrders(
+            userId,
+            startDate,
+            endDate,
+            status,
+            lowerPriceLimit,
+            upperPriceLimit,
+            lowerSize,
+            upperSize,
+            side,
+            assetName
+        );
+        return ResponseEntity.ok(orders);
+    }
+
+    @PostMapping // customer kendisi + admin
     public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
         OrderDTO createdOrder = orderService.createOrder(orderDTO);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<OrderDTO> updateOrder(@PathVariable UUID id, @RequestBody OrderDTO orderDTO) {
-        orderDTO.setId(id);
-        OrderDTO updatedOrder = orderService.updateOrder(orderDTO);
-        return ResponseEntity.ok(updatedOrder);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable UUID id) {
-        orderService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/{id}") // customer kendisi + admin
+    public ResponseEntity<OrderDTO> deleteOrder(@PathVariable UUID id) {
+        OrderDTO cancelledOrder = orderService.deleteById(id);
+        return ResponseEntity.ok(cancelledOrder);
     }
 }

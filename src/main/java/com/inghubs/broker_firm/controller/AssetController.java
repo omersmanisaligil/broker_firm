@@ -5,6 +5,7 @@ import com.inghubs.broker_firm.service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class AssetController {
     @Autowired
     private AssetService assetService;
 
-    @GetMapping
+    @GetMapping //TODO admin
     public ResponseEntity<List<AssetDTO>> getAllAssets() {
         List<AssetDTO> assets = assetService.getAllAssets();
         return ResponseEntity.ok(assets);
@@ -29,10 +30,31 @@ public class AssetController {
         return ResponseEntity.ok(asset);
     }
 
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<AssetDTO>> getAssetsByCustomerId(@PathVariable UUID customerId) {
-        List<AssetDTO> assets = assetService.getByCustomerId(customerId);
+//    @PreAuthorize("hasAuthority('ADMIN') or #customerId == principal.id") //TODO hatalı customerId'de patlıyor
+    @GetMapping("/searchByCustomer/{customerId}")
+    public ResponseEntity<List<AssetDTO>> getAssetsByUserId(@PathVariable UUID userId) {
+        List<AssetDTO> assets = assetService.getByUserId(userId);
         return ResponseEntity.ok(assets);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<AssetDTO>> filterAssets(
+        @RequestParam(required = false) UUID userId,
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) Double lowerSizeLimit,
+        @RequestParam(required = false) Double upperSizeLimit,
+        @RequestParam(required = false) Double lowerUsableLimit,
+        @RequestParam(required = false) Double upperUsableLimit
+    ) {
+        List<AssetDTO> assetsFiltered = assetService.filterAssets(
+            userId,
+            name,
+            lowerSizeLimit,
+            upperSizeLimit,
+            lowerUsableLimit,
+            upperUsableLimit
+        );
+        return ResponseEntity.ok(assetsFiltered);
     }
 
     @PostMapping
