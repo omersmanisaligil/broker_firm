@@ -2,6 +2,7 @@ package com.inghubs.broker_firm.service;
 
 import com.inghubs.broker_firm.entity.User;
 import com.inghubs.broker_firm.repository.UserRepository;
+import com.inghubs.broker_firm.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthorities(user));
+        return new UserDetailsImpl(user.getId(),user.getUsername(), user.getPassword(), getAuthorities(user));
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(User user) {

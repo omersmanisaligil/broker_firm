@@ -26,11 +26,15 @@ public class SecurityConfig {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private UserSecurity userSecurity;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(httpConf -> httpConf
                 .requestMatchers("/api/admin/**").hasAuthority(ROLE.ADMIN.toString())
+                .requestMatchers("/api/assets/searchByCustomer/{userId}").access(userSecurity)
                 .requestMatchers("/api/customers/**","/api/orders/**","/api/assets/**")
                     .hasAnyAuthority(ROLE.ADMIN.toString(),ROLE.CUSTOMER.toString())
             )
