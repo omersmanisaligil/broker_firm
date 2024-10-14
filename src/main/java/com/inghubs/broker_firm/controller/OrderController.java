@@ -19,19 +19,19 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping//TODO all
+    @GetMapping
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
         List<OrderDTO> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 
-    @GetMapping("/{id}")//TODO admin + customer if belongs to him
+    @GetMapping("/{userId}/{id}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable UUID id) {
         OrderDTO order = orderService.getOneById(id);
         return ResponseEntity.ok(order);
     }
 
-    @GetMapping("/searchByCustomer/{userId}")//TODO customer
+    @GetMapping("/searchByCustomer/{userId}")
     public ResponseEntity<List<OrderDTO>> getOrdersByCustomerId(@PathVariable UUID userId) {
         List<OrderDTO> orders = orderService.getByUserId(userId);
         return ResponseEntity.ok(orders);
@@ -65,13 +65,13 @@ public class OrderController {
         return ResponseEntity.ok(orders);
     }
 
-    @PostMapping // customer kendisi + admin
+    @PostMapping("/{userId}/create-order")
     public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
         OrderDTO createdOrder = orderService.createOrder(orderDTO);
         return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}") // customer kendisi + admin
+    @DeleteMapping("/{userId}/{id}")
     public ResponseEntity<OrderDTO> deleteOrder(@PathVariable UUID id) {
         OrderDTO cancelledOrder = orderService.deleteById(id);
         return ResponseEntity.ok(cancelledOrder);

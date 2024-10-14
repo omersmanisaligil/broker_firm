@@ -14,19 +14,29 @@ public class UserSecurity implements AuthorizationManager<RequestAuthorizationCo
 
     @Override
     public AuthorizationDecision check(Supplier authenticationSupplier, RequestAuthorizationContext ctx) {
-        UUID userId = UUID.fromString(ctx.getVariables().get("userId"));
         Authentication authentication = (Authentication) authenticationSupplier.get();
+
         boolean isAdmin = authentication.getAuthorities().stream()
             .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN"));
         if(isAdmin){
             return new AuthorizationDecision(true);
         }
 
-        return new AuthorizationDecision(hasUserId(authentication, userId));
+        String userIdParam = ctx.getRequest().getParameter("userId");
+        if(userIdParam == null){
+            userIdParam = ctx.getVariables().get("userId");
+        }
+
+        if(userIdParam != null){
+            UUID userId = UUID.fromString(userIdParam);
+            return new AuthorizationDecision(hasUserId(authentication, userId));
+        }else{
+            return new AuthorizationDecision(false);
+        }
     }
     public boolean hasUserId(Authentication authentication, UUID userId) {
         UserDetailsImpl user = (UserDetailsImpl)authentication.getPrincipal();
-        return user.getId() == userId;
+        return userId.equals(user.getId());
     }
 
 }

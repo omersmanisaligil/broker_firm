@@ -17,13 +17,13 @@ public class AssetController {
     @Autowired
     private AssetService assetService;
 
-    @GetMapping //TODO admin
+    @GetMapping
     public ResponseEntity<List<AssetDTO>> getAllAssets() {
         List<AssetDTO> assets = assetService.getAllAssets();
         return ResponseEntity.ok(assets);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}/{id}")
     public ResponseEntity<AssetDTO> getAssetById(@PathVariable UUID id) {
         AssetDTO asset = assetService.getOneById(id);
         return ResponseEntity.ok(asset);
@@ -55,20 +55,20 @@ public class AssetController {
         return ResponseEntity.ok(assetsFiltered);
     }
 
-    @PostMapping
+    @PostMapping("/{userId}/create")
     public ResponseEntity<AssetDTO> createAsset(@RequestBody AssetDTO assetDTO) {
         AssetDTO createdAsset = assetService.createAsset(assetDTO);
         return new ResponseEntity<>(createdAsset, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{userId}/update/{id}")
     public ResponseEntity<AssetDTO> updateAsset(@PathVariable UUID id, @RequestBody AssetDTO assetDTO) {
         assetDTO.setId(id);
         AssetDTO updatedAsset = assetService.updateAsset(assetDTO);
         return ResponseEntity.ok(updatedAsset);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{userId}/delete/{id}")
     public ResponseEntity<Void> deleteAsset(@PathVariable UUID id) {
         assetService.deleteById(id);
         return ResponseEntity.noContent().build();

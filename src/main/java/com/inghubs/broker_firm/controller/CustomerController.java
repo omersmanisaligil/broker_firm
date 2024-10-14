@@ -19,15 +19,15 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @GetMapping //TODO all
+    @GetMapping
     public ResponseEntity<List<UserDTO>> getAllCustomers() {
         List<UserDTO> customers = customerService.getAllCustomers();
         return ResponseEntity.ok(customers);
     }
 
-    @GetMapping("/{id}") //TODO admin + customer special
-    public ResponseEntity<UserDTO> getCustomerById(@PathVariable UUID id) {
-        UserDTO customer = customerService.getOneById(id);
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDTO> getCustomerById(@PathVariable UUID userId) {
+        UserDTO customer = customerService.getOneById(userId);
         return ResponseEntity.ok(customer);
     }
 
@@ -37,19 +37,19 @@ public class CustomerController {
         return new ResponseEntity<>(createdCustomer, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}/deposit")//TODO admin + customer
-    public ResponseEntity<UserDTO> depositMoney(@PathVariable UUID id, @RequestBody AssetTransactionRequest depositRequest){
-        UserDTO updatedCustomer = customerService.depositMoney(id,depositRequest);
+    @PutMapping("/{userId}/deposit")
+    public ResponseEntity<UserDTO> depositMoney(@PathVariable UUID userId, @RequestBody AssetTransactionRequest depositRequest){
+        UserDTO updatedCustomer = customerService.depositMoney(userId,depositRequest);
         return ResponseEntity.ok(updatedCustomer);
     }
 
-    @PutMapping("/{id}/withdraw")//TODO admin + customer
-    public ResponseEntity<UserDTO> withdrawMoney(@PathVariable UUID id, @RequestBody AssetTransactionRequest withdrawRequest){
-        UserDTO updatedCustomer = customerService.withdrawMoney(id,withdrawRequest);
+    @PutMapping("/{userId}/withdraw")
+    public ResponseEntity<UserDTO> withdrawMoney(@PathVariable UUID userId, @RequestBody AssetTransactionRequest withdrawRequest){
+        UserDTO updatedCustomer = customerService.withdrawMoney(userId,withdrawRequest);
         return ResponseEntity.ok(updatedCustomer);
     }
 
-    @DeleteMapping("/{id}") //TODO admin + customer
+    @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) {
         customerService.deleteById(id);
         return ResponseEntity.noContent().build();

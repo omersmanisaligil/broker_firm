@@ -34,7 +34,14 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(httpConf -> httpConf
                 .requestMatchers("/api/admin/**").hasAuthority(ROLE.ADMIN.toString())
-                .requestMatchers("/api/assets/searchByCustomer/{userId}").access(userSecurity)
+                .requestMatchers(
+                    "/api/assets/searchByCustomer/{userId}",
+                    "/api/assets/filter",
+                    "/api/assets/{userId}/**",
+                    "/api/customers/{userId}/**",
+                    "/api/orders/filter",
+                    "/api/orders/searchByCustomer/{userId}",
+                    "/api/orders/{userId}/**").access(userSecurity)
                 .requestMatchers("/api/customers/**","/api/orders/**","/api/assets/**")
                     .hasAnyAuthority(ROLE.ADMIN.toString(),ROLE.CUSTOMER.toString())
             )
