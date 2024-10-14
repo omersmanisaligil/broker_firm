@@ -140,7 +140,7 @@ public class OrderService {
            throw new ResourceNotFoundException("User does not have any assets");
         }
 
-        if(SIDE.BUY.equals(orderDTO.getOrderSide())){
+        if(SIDE.BUY.equals(orderDTO.getOrderSide())){ //open buy order
             Asset assetTRY = userAssets.stream()
                 .filter(asset -> Constants.TRY.equals(asset.getName()))
                 .findFirst().orElseThrow(() -> new ResourceNotFoundException("No TRY asset" +
@@ -157,7 +157,7 @@ public class OrderService {
             // set usable size to currentSize - orderSize*orderPrice because that amount of
             // TRY asset will be locked
             assetTRY.setUsableSize(usableTRYSize - (orderCost));
-        } else {
+        } else { //open sell order
             Asset assetToBeSold = userAssets.stream()
                 .filter(asset -> orderDTO.getAssetName().equals(asset.getName()))
                 .findFirst().orElseThrow(() -> new ResourceNotFoundException("Asset with name " + orderDTO.getAssetName() +
@@ -207,8 +207,7 @@ public class OrderService {
         Double orderCost = order.getPrice()* order.getSize();
 
         // re-adjust the usable size
-        // TODO SEPERATE METHODS
-        if (SIDE.BUY.equals(order.getOrderSide())){
+        if (SIDE.BUY.equals(order.getOrderSide())){ //matched BUY order
             // we already decreased the usable size when we opened the order, now we need to decrease the
             // actual size of TRY asset
 
@@ -228,7 +227,7 @@ public class OrderService {
                 assetBought.setSize(assetBought.getSize() + order.getSize());
                 assetBought.setUsableSize(assetBought.getUsableSize() + order.getSize());
             }
-        } else {
+        } else { //matched SELL order
             // increase both the usable and full TRY asset size,
             // decrease the sold asset's full size
             String assetName = order.getAssetName();
@@ -265,13 +264,13 @@ public class OrderService {
         List<Asset> assets = user.getAssets();
         Double orderCost = order.getPrice() * order.getSize();
 
-        if (SIDE.BUY.equals(order.getOrderSide())){
+        if (SIDE.BUY.equals(order.getOrderSide())){ //TODO function cancel BUY order
             //update TRY asset's usable size only, we haven't made any operations on the full size
             Asset assetTRY = assets.stream().filter(asset -> Constants.TRY.equals(asset.getName())).findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("No TRY assets found for user with id " + user.getId()));
             Double usableSize = assetTRY.getUsableSize();
             assetTRY.setUsableSize(usableSize + orderCost);
-        } else {
+        } else { //TODO function CANCEL SELL ORDER
             // restore whatever asset user was trying to sell before
             // no need to make any operation on TRY asset sşnce we haven't modified it
             String assetName = order.getAssetName();
@@ -288,6 +287,7 @@ public class OrderService {
 
         return convertToDTO(cancelledOrder);
     }
+    
 
     public OrderDTO convertToDTO(Order order) {
         return modelMapper.map(order, OrderDTO.class);

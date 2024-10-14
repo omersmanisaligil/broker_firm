@@ -30,8 +30,7 @@ public class AssetController {
         return ResponseEntity.ok(asset);
     }
 
-//    @PreAuthorize("hasAuthority('ADMIN') or #customerId == principal.id") //TODO hatalı customerId'de patlıyor
-    @GetMapping("/searchByCustomer/{customerId}")
+    @GetMapping("/searchByCustomer/{userId}")
     public ResponseEntity<List<AssetDTO>> getAssetsByUserId(@PathVariable UUID userId) {
         List<AssetDTO> assets = assetService.getByUserId(userId);
         return ResponseEntity.ok(assets);

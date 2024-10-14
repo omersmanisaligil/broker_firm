@@ -215,7 +215,12 @@ public class OrderServiceTest {
     }
 
     @Test
-    public void validateOrderCancellation(){
+    public void validateBuyOrderCancellation(){
+
+    }
+
+    @Test
+    public void validateSellOrderCancellation(){
 
     }
 }
